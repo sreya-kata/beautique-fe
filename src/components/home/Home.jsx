@@ -1,9 +1,11 @@
-import Hero from "./hero/Hero";
+import Features from "./Features";
+import Hero from "./Hero";
 
 function Home() {
   return (
     <>
       <Hero />
+      <Features />
     </>
   );
 }
