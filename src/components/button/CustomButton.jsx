@@ -27,7 +27,7 @@ function CustomButton({ variant, children, ...props }) {
 
 // Define prop types for validation
 CustomButton.propTypes = {
-  variant: PropTypes.oneOf(["secondary", "outline"]).isRequired,
+  variant: PropTypes.oneOf(["secondary", "outline"]),
   children: PropTypes.node.isRequired, // Validates that children are passed
 };
 
