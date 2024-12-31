@@ -1,18 +1,34 @@
-import { Box } from "@chakra-ui/react";
+import { Input, Stack, Fieldset } from "@chakra-ui/react";
+import { Field } from "@/components/ui/field";
+import CustomButton from "../button/CustomButton";
 
-function Login() {
+const Login = () => {
   return (
-    <Box
-      as="main"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      minH="100vh"
-      p={8} // Using Chakra's spacing scale
-    >
-      Hi
-    </Box>
+    <Fieldset.Root size="lg" maxW="md" mx="auto" mt={12}>
+      <Stack spacing={4}>
+        {/* Fieldset Legend */}
+        <Fieldset.Legend textAlign="center" fontSize="xl" fontWeight="bold">
+          Sign In
+        </Fieldset.Legend>
+      </Stack>
+
+      <Fieldset.Content>
+        {/* Email Field */}
+        <Field label="Email">
+          <Input name="email" type="email" />
+        </Field>
+
+        {/* Password Field */}
+        <Field label="Password">
+          <Input name="password" type="password" />
+        </Field>
+      </Fieldset.Content>
+
+      <CustomButton type="submit" alignSelf="center" mt={4}>
+        Log In
+      </CustomButton>
+    </Fieldset.Root>
   );
-}
+};
 
 export default Login;
