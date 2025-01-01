@@ -1,14 +1,11 @@
-import {
-  Box,
-  Input,
-  Button,
-  VStack,
-  HStack,
-  Text,
-  Heading,
-} from "@chakra-ui/react";
+import { Box, Input, HStack, Text, Heading, Separator } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
+import { Field } from "@/components/ui/field";
+import {
+  NativeSelectField,
+  NativeSelectRoot,
+} from "@/components/ui/native-select";
 import { useUser } from "../hooks/useUser";
 import CustomButton from "../button/CustomButton";
 
@@ -22,6 +19,9 @@ const MultiStepForm = () => {
     age: "",
     gender: "",
     skinType: "",
+    skinTone: "",
+    budget: "",
+    allergiesSensitivities: "",
   });
 
   // Handle input changes
@@ -44,21 +44,24 @@ const MultiStepForm = () => {
         age: formValues.age,
         gender: formValues.gender,
         skinType: formValues.skinType,
+        skinTone: formValues.skinTone,
+        budget: formValues.budget,
+        allergiesSensitivities: formValues.allergiesSensitivities,
       };
 
       // Call the backend APIs
       await axios.put(`/api/profile/update/${userId}`, {
         nickname: payload.nickname,
         pronouns: payload.pronouns,
-        age: payload.age,
+        age: Number(payload.age),
         gender: payload.gender,
       });
 
       await axios.put(`/api/profile/skincare-profile/${userId}`, {
         skinType: payload.skinType,
-        pronouns: payload.pronouns,
-        age: payload.age,
-        gender: payload.gender,
+        skinTone: payload.pronouns,
+        budget: payload.budget,
+        allergiesSensitivities: payload.allergiesSensitivities,
       });
 
       console.log("All data submitted successfully!");
@@ -77,80 +80,87 @@ const MultiStepForm = () => {
       case 1:
         return (
           <>
-            <Heading>Let’s Personalize Your Experience!</Heading>
-            <Text mb={6}>
-              Answer these questions so we can build a custom dashboard for you.
+            <Heading
+              fontSize="4xl"
+              fontWeight="500"
+              fontFamily="'Reddit Sans', sans-serif"
+            >
+              Let&apos;s Personalize Your Experience!
+            </Heading>
+            <Text my={6} fontSize="lg" fontFamily="'Reddit Sans', sans-serif">
+              Answer some questions so we can build a custom dashboard for you.
             </Text>
-            <HStack w="100%" spacing={6}>
-              <VStack w="50%">
-                <Text>Nickname</Text>
+            <HStack w="100%" spacing={6} mt={12} gap={24}>
+              <Field label="Nickname" key="name" w="100%">
                 <Input
                   name="nickname"
                   placeholder="Enter your nickname"
                   value={formValues.nickname}
                   onChange={handleChange}
+                  _focus={{ bg: "white", borderColor: "#FE99B4" }}
                 />
-              </VStack>
-              <VStack w="50%">
-                <Text>Pronouns</Text>
-                <Input
-                  name="pronouns"
-                  placeholder="Enter your pronouns"
-                  value={formValues.pronouns}
-                  onChange={handleChange}
-                />
-              </VStack>
-            </HStack>
-            <HStack w="100%" spacing={6} mt={4}>
-              <VStack w="50%">
-                <Text>Age</Text>
+              </Field>
+              <Field label="Age" key="age" w="100%">
                 <Input
                   name="age"
                   placeholder="Enter your age"
                   value={formValues.age}
                   onChange={handleChange}
                 />
-              </VStack>
-              <VStack w="50%">
-                <Text>Gender</Text>
-                <Input
-                  name="gender"
-                  placeholder="Enter your gender"
-                  value={formValues.gender}
-                  onChange={handleChange}
-                />
-              </VStack>
+              </Field>
+            </HStack>
+            <HStack w="100%" spacing={6} mt={12} gap={24}>
+              <Field label="Gender" key="gender" w="100%">
+                <NativeSelectRoot>
+                  <NativeSelectField
+                    name="gender"
+                    items={["Female", "Male", "Non-Binary", "Other"]}
+                    value={formValues.gender}
+                    onChange={handleChange}
+                  />
+                </NativeSelectRoot>
+              </Field>
+              <Field label="Pronouns" key="pronouns" w="100%">
+                <NativeSelectRoot>
+                  <NativeSelectField
+                    items={["She/Her", "He/Him", "They/Them"]}
+                  />
+                </NativeSelectRoot>
+              </Field>
             </HStack>
           </>
         );
       case 2:
         return (
           <>
-            <Heading>Skincare Preferences</Heading>
-            <Text mb={6}>
+            <Heading
+              fontSize="4xl"
+              fontWeight="500"
+              fontFamily="'Reddit Sans', sans-serif"
+            >
+              Skincare Preferences
+            </Heading>
+            <Text my={6} fontSize="lg" fontFamily="'Reddit Sans', sans-serif">
               Let us know about your skincare preferences to personalize your
               dashboard.
             </Text>
-            <HStack w="100%" spacing={6}>
-              <VStack w="50%">
-                <Text>Skin Type</Text>
+            <HStack w="100%" spacing={6} mt={12}>
+              <Field label="Skin Type" key="skintype" w="100%">
                 <Input
                   name="skinType"
                   placeholder="Enter your skin type"
                   value={formValues.skinType}
                   onChange={handleChange}
                 />
-              </VStack>
-              <VStack w="50%">
-                <Text>Pronouns</Text>
-                <Input
-                  name="pronouns"
-                  placeholder="Enter your pronouns"
-                  value={formValues.pronouns}
-                  onChange={handleChange}
-                  isReadOnly // To keep consistent data across steps
-                />
-              </VStack>
+              </Field>
+              <Text>Pronouns</Text>
+              <Input
+                name="pronouns"
+                placeholder="Enter your pronouns"
+                value={formValues.pronouns}
+                onChange={handleChange}
+                isReadOnly // To keep consistent data across steps
+              />
             </HStack>
           </>
         );
@@ -159,28 +169,29 @@ const MultiStepForm = () => {
     }
   };
 
-  if (!userId) {
-    console.error("User ID is missing");
-    return <p>Error: Missing user information.</p>;
-  }
+  // if (!userId) {
+  //   console.error("User ID is missing");
+  //   return <p>Error: Missing user information.</p>;
+  // }
 
   return (
-    <Box textAlign="center" py={8} mx="auto" w="50%">
-      {renderStep()}
-      <HStack mt={8} spacing={4} justifyContent="center">
-        {step > 1 && (
-          <Button colorScheme="gray" onClick={handleBack}>
-            Back
-          </Button>
-        )}
-        {step < 2 && <CustomButton onClick={handleNext}>Next</CustomButton>}
-        {step === 2 && (
-          <Button colorScheme="pink" onClick={handleSubmit}>
-            Submit
-          </Button>
-        )}
-      </HStack>
-    </Box>
+    <>
+      <Separator w="80%" mx="auto" borderColor="gray.300" />
+      <Box textAlign="center" px={72} pt={12} mb={24}>
+        {renderStep()}
+        <HStack mt={8} spacing={4} justifyContent="center">
+          {step > 1 && (
+            <CustomButton variant="secondary" onClick={handleBack}>
+              Back
+            </CustomButton>
+          )}
+          {step < 2 && <CustomButton onClick={handleNext}>Next</CustomButton>}
+          {step === 2 && (
+            <CustomButton onClick={handleSubmit}>Submit</CustomButton>
+          )}
+        </HStack>
+      </Box>
+    </>
   );
 };
 
