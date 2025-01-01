@@ -1,4 +1,4 @@
-import { Box, Text, Stack, Heading } from "@chakra-ui/react";
+import { Box, Text, Stack, Heading, Link } from "@chakra-ui/react";
 import hero from "../../assets/hero.jpg";
 import CustomButton from "../button/CustomButton";
 
@@ -34,7 +34,9 @@ function Hero() {
         align="center"
         gap={12}
       >
-        <CustomButton>Get Started</CustomButton>
+        <Link href="/register">
+          <CustomButton>Get Started</CustomButton>
+        </Link>
         <CustomButton variant="secondary">Learn More</CustomButton>
       </Stack>
     </Box>
